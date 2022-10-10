@@ -12,6 +12,9 @@
 
 ### Instructions
 ```bash
+# Use `npm ci` for clean install
+# if `npm install` gives problems
+npm ci
 # Start server backend or frontend
 # in respective folder
 npm start
