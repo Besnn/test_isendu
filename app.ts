@@ -1,11 +1,12 @@
-const config = require('./helpers/config');
-const express = require('express');
-const middleware = require('./helpers/middleware');
-const logger = require('./helpers/logger');
-const mongoose = require('mongoose');
+import config from './helpers/config';
+import express from 'express';
+import middleware from './helpers/middleware';
+import logger from './helpers/logger';
+import mongoose from 'mongoose';
+import todoRouter from './controllers/todo';
 
 const app = express();
-const todoRouter = require('./controllers/todo');
+
 
 logger.info('Connecting to', config.MONGODB_URI);
 
@@ -24,4 +25,4 @@ app.use('/', todoRouter);
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
-module.exports = app;
+export default app;

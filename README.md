@@ -12,15 +12,19 @@
 
 ### Instructions
 ```bash
-# Use `npm ci` for clean install
-# if `npm install` gives problems
-npm ci
+# Install node modules
+npm install
+
 # Start server backend or frontend
 # in respective folder
 npm start
 
 # Run unit tests
 npm run test
+
+# Build
+npm run build
+
 # /tests folder contains REST request files
 # that can be used in conjunction with the 
 # VSC REST Client for quick smoke tests
@@ -28,9 +32,4 @@ npm run test
 # mongodb.com cloud account credentials:
 # e-mail: zakyccr164@disposableemail.us
 # password: X2Zcz4TxvTSNQiP
-
-#DONE: CRUD
-#TODO: typescript??
-#TODO: document w/ jsdoc
-#TODO: write test suite
 ```

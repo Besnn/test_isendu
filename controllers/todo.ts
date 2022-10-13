@@ -1,9 +1,10 @@
-const todoRouter = require('express').Router();
-const Todo = require('../models/todo');
-const axios = require('axios');
-const config = require('../helpers/config');
-//const mongoose = require('mongoose');
+import express from 'express';
+import Todo from '../models/todo';
+import axios from 'axios';
+import config from '../helpers/config';
 //const ObjectId = mongoose.Types.ObjectId;
+
+const todoRouter: express.Router = express.Router();
 
 todoRouter.get('/', async (request, response) => {
   const string = request.query.contains;
@@ -12,23 +13,25 @@ todoRouter.get('/', async (request, response) => {
     //                            case-insensitive search ^
     await Todo.find({});
   if (todos && todos.length > 0)
-    response.json(todos);
+    return response.json(todos);
   else
-    response.status(404).end();
+    return response.status(404);
 });
 
 todoRouter.get('/:id', async (request, response) => {
-  const todo = await Todo.findById(request.params.id);
+  const todo = await Todo.find({ id: request.params.id });
   if (todo)
-    response.json(todo);
+    return response.json(todo).status(200);
   else
-    response.status(404).end();
+    return response.status(404);
 });
 
 todoRouter.post('/', async (request, response) => {
   const body = request.body;
   if (await Todo.findOne({ id: body.id }))
     return response.status(400).json({ error: 'todo already exists' });
+  if (!body.title)
+    return response.status(400).json({ error: 'title missing' });
   else {
     const todo = new Todo({
       id: body.id,
@@ -37,7 +40,7 @@ todoRouter.post('/', async (request, response) => {
       title: body.title,
     });
     const savedTodo = await todo.save();
-    response.status(201).json(savedTodo);
+    return response.status(201).json(savedTodo);
   }
 });
 
@@ -51,21 +54,33 @@ todoRouter.post('/random', async (request, response) => {
     title: random.data.title,
   });
   const savedTodo = await todo.save();
-  response.status(201).json(savedTodo);
+  return response.status(201).json(savedTodo);
 });
 
 todoRouter.delete('/:id', async (request, response) => {
   if (!await Todo.findOne({ id: request.params.id }))
     return response.status(404).end();
   await Todo.findOneAndDelete({ id: request.params.id });
-  response.status(204).end();
+  return response.status(204).end();
 });
 
 todoRouter.delete('/', async (request, response) => {
   const string = request.query.contains;
   if (string)
     await Todo.deleteMany({ title: { $regex: string, $options: 'i' } });
-  response.status(204).end();
+  return response.status(204).end();
+});
+
+todoRouter.put('/:id', async (request, response) => {
+  const body = request.body;
+  const todo = {
+    id: body.id,
+    userId: body.userId,
+    completed: body.completed,
+    title: body.title,
+  };
+  const updatedTodo = await Todo.findOneAndUpdate({ id: request.params.id }, todo, { new: true });
+  return updatedTodo ? response.json(updatedTodo).status(200) : response.status(404);
 });
 
 todoRouter.put('/:id', (request, response, next) => {
@@ -85,5 +100,5 @@ todoRouter.put('/:id', (request, response, next) => {
     .catch(error => next(error));
 });
 
-module.exports = todoRouter;
+export default todoRouter;
 

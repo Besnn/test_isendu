@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const todoSchema = new mongoose.Schema({
   id: Number,
@@ -19,5 +19,5 @@ todoSchema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('Todo', todoSchema);
+export default mongoose.model('Todo', todoSchema);
 
